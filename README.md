@@ -1,2 +1,2 @@
 # projekt-PA
-Kalkulator spalania paliwa w samochodzie 
+System zarządzania biblioteka 
