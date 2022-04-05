@@ -34,11 +34,18 @@ private:
     bool tylkoCyfry(QString dane);
     bool uzytkownikIstnieje(QString indeks);
     void zapiszUzytkownika(QString imie, QString nazwisko, QString indeks);
+    void resetujKontrolkiNowegoUzytkownika();
     void usunWypozyczeniaUzytkownika(QString indeks);
     void usunUzytkownika(QString indeks);
+    void resetujKontrolkiUsuwaniaUzytkownika();
+    bool kodPoprawny(QString kod);
+    bool tekstPoprawny(QString tekst, int minDlugosc=2);
+    bool ksiazkaIstnieje(QString kod);
     void zapiszKsiazke(QString tytul, QString autor, QString kod);
+    void resetujKontrolkiNowejKsiazki();
     void usunWypozyczeniaKsiazki(QString kod);
     void usunKsiazke(QString kod);
+    void resetujKontrolkiUsuwaniaKsiazki();
     void aktualizujTabeleUzytkownikow();
     void aktualizujTabeleKsiazek();
 };
