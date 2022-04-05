@@ -17,7 +17,7 @@ MainWindow::~MainWindow()
 void MainWindow::przygotujBazeDanych()
 {
     database = QSqlDatabase::addDatabase("QSQLITE");
-    database.setDatabaseName("../Biblioteka 29.03/database.db");
+    database.setDatabaseName("../Biblioteka 06.04/database.db");
 
     if(database.open())
     {
@@ -52,7 +52,6 @@ void MainWindow::przygotujBazeDanych()
 
 void MainWindow::on_dodajUzytkownika_clicked()
 {
-
     QString imie = ui->nowyUzytkownikImie->text();
     QString nazwisko = ui->nowyUzytkownikNazwisko->text();
     QString indeks = ui->nowyUzytkownikIndeks->text();
@@ -129,6 +128,14 @@ void MainWindow::zapiszUzytkownika(QString imie, QString nazwisko, QString indek
 
     aktualizujTabeleUzytkownikow();
 }
+
+void MainWindow::resetujKontrolkiNowegoUzytkownika()
+{
+    ui->nowyUzytkownikImie->setText("");
+    ui->nowyUzytkownikNazwisko->setText("");
+    ui->nowyUzytkownikIndeks->setText("");
+}
+
 void MainWindow::on_usunUzytkownika_clicked()
 {
     QString indeks = ui->usunUzytkownikaIndeks->text();
@@ -149,6 +156,12 @@ void MainWindow::on_usunUzytkownika_clicked()
     usunWypozyczeniaUzytkownika(indeks);
     usunUzytkownika(indeks);
     resetujKontrolkiUsuwaniaUzytkownika();
+}
+
+void MainWindow::resetujKontrolkiUsuwaniaUzytkownika()
+{
+    ui->usunUzytkownikaIndeks->setText("");
+    ui->usunUzytkownikaPotwierdzenie->setCheckState(Qt::CheckState::Unchecked);
 }
 
 void MainWindow::usunWypozyczeniaUzytkownika(QString indeks)
@@ -177,6 +190,7 @@ void MainWindow::usunUzytkownika(QString indeks)
 
 void MainWindow::on_dodajKsiazke_clicked()
 {
+    // pobranie danych ksiazki z kontrolek
     QString tytul = ui->nowaKsiazkaTytul->text();
     QString autor = ui->nowaKsiazkaAutor->text();
     QString kod = ui->nowaKsiazkaKod->text();
@@ -208,6 +222,38 @@ void MainWindow::zapiszKsiazke(QString tytul, QString autor, QString kod)
     }
 
     aktualizujTabeleKsiazek();
+}
+
+void MainWindow::resetujKontrolkiNowejKsiazki()
+{
+    ui->nowaKsiazkaTytul->setText("");
+    ui->nowaKsiazkaAutor->setText("");
+    ui->nowaKsiazkaKod->setText("");
+}
+
+bool MainWindow::ksiazkaIstnieje(QString kod)
+{
+    QSqlQuery query;
+    if(query.exec("SELECT COUNT(kod) FROM KSIAZKI WHERE kod = '" + kod + "';"))
+    {
+        query.next();
+        return query.value(0).toInt() == 1;
+    }
+    else
+    {
+        qDebug() << query.lastError().text();
+    }
+    return false;
+}
+
+bool MainWindow::tekstPoprawny(QString tekst, int minDlugosc)
+{
+    return tylkoLiteryOrazSpacje(tekst) && tekst.size() >= minDlugosc;
+}
+
+bool MainWindow::kodPoprawny(QString kod)
+{
+    return tylkoCyfry(kod) && kod.size() >= 4;
 }
 
 void MainWindow::on_usunKsiazke_clicked()
@@ -255,6 +301,13 @@ void MainWindow::usunKsiazke(QString kod)
 
     aktualizujTabeleKsiazek();
 }
+
+void MainWindow::resetujKontrolkiUsuwaniaKsiazki()
+{
+    ui->usunKsiazkeKod->setText("");
+    ui->usunKsiazkePotwierdzenie->setCheckState(Qt::CheckState::Unchecked);
+}
+
 void MainWindow::aktualizujTabeleUzytkownikow()
 {
     QSqlQueryModel* model = new QSqlQueryModel();
